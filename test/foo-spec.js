@@ -1,5 +1,5 @@
 "use strict";
-const {foo, boo} = require("../src/foo");
+const Foo = require("../src/foo");
 describe("Foo", function () {
 	beforeEach(function () {
 
@@ -10,10 +10,7 @@ describe("Foo", function () {
 	});
 
 	it("should ", function () {
-		expect(foo()).toBe("4.16.4");
-	});
-
-	it("should ", function () {
-		expect(boo()).toBe(3);
+		let a = new Foo();
+		expect(a.foo()).toBe(4);
 	});
 });

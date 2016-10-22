@@ -1,13 +1,9 @@
 "use strict";
 const _ = require("lodash");
 
-module.exports =
-{
+module.exports = class Foo {
+
 	foo() {
-		return _.VERSION;
-	},
-	boo() {
-		let {b} = {a: 2, b: 3};
-		return b;
+		return 4;
 	}
 };
