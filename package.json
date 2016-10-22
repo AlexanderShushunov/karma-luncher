@@ -1,0 +1,17 @@
+{
+  "name": "karma",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node --harmony ./src/app",
+    "test": "karma start karma.conf.js --log-level debug --single-run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.0.2",
+    "lodash": "^4.16.4"
+  }
+}
