@@ -1,6 +1,6 @@
 "use strict";
 
-const {step, c} = require("./game");
+const {step} = require("./game");
+const {c} = require("../src/helpers");
 
-
-step([c(0, 0), c(1, 0), c(1, 0)]);
+var a = step([c(0, 0), c(0, 1), c(0, 3)])

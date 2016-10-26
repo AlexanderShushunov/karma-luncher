@@ -3,25 +3,60 @@ const _ = require("lodash");
 const selfProduct = arr => require('cartesian-product')([arr, arr]);
 
 module.exports = {
-	step,
-	observableField,
-	neighbours,
-	isAlive: (population, x, y) => population.some(_.curry(_.isEqual)(_, {x, y})),
-	c: (x, y) => ({x, y})
+    step,
+    _forTest: {
+        observableDeadField,
+        neighbours,
+        isAlive
+    }
 };
 
 function step(population) {
-	return observableField(population).filter(cell => birthRule(cell, population));
+    return newCells(population).concat(survivedCells(population));
+}
+
+function newCells(population) {
+    return observableDeadField(population).filter(_.partial(birthRule, _, population));
+}
+
+function survivedCells(population) {
+    return _(population)
+        .reject(_.partial(killLonelyRule, _, population))
+        .reject(_.partial(killOvercrowdedRule, _, population))
+        .value();
 }
 
 function birthRule(cell, population) {
-	return _.intersectionWith(neighbours(cell), population, _.isEqual).length == 3;
+    return aliveNeighbours(cell, population).length == 3;
 }
 
-function observableField(population) {
-	return _(population).flatMap(neighbours).uniqWith(_.isEqual).value();
+function killLonelyRule(cell, population) {
+    return aliveNeighbours(cell, population).length < 2;
+}
+
+function killOvercrowdedRule(cell, population) {
+    return aliveNeighbours(cell, population).length > 3;
+}
+
+function isAlive(population, cell) {
+    return population.some(_.partial(_.isEqual, cell));
+}
+
+function observableDeadField(population) {
+    return _(population)
+        .flatMap(neighbours)
+        .reject(_.partial(isAlive, population))
+        .uniqWith(_.isEqual)
+        .value();
 }
 
 function neighbours(cell) {
-	return selfProduct([-1, 0, 1]).map(d => ({x: cell.x + d[0], y: cell.y + d[1]}));
+    return _(selfProduct([-1, 0, 1]))
+        .reject(_.partial(_.isEqual, [0, 0]))
+        .map(d => ({x: cell.x + d[0], y: cell.y + d[1]}))
+        .value();
+}
+
+function aliveNeighbours(cell, population) {
+    return _.intersectionWith(neighbours(cell), population, _.isEqual);
 }
