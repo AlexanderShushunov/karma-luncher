@@ -7,6 +7,7 @@ module.exports = {
     _forTest: {
         observableDeadField,
         neighbours,
+        aliveNeighbours,
         isAlive
     }
 };
@@ -42,14 +43,6 @@ function isAlive(population, cell) {
     return population.some(_.partial(_.isEqual, cell));
 }
 
-function observableDeadField(population) {
-    return _(population)
-        .flatMap(neighbours)
-        .reject(_.partial(isAlive, population))
-        .uniqWith(_.isEqual)
-        .value();
-}
-
 function neighbours(cell) {
     return _(selfProduct([-1, 0, 1]))
         .reject(_.partial(_.isEqual, [0, 0]))
@@ -59,4 +52,12 @@ function neighbours(cell) {
 
 function aliveNeighbours(cell, population) {
     return _.intersectionWith(neighbours(cell), population, _.isEqual);
+}
+
+function observableDeadField(population) {
+    return _(population)
+        .flatMap(neighbours)
+        .reject(_.partial(isAlive, population))
+        .uniqWith(_.isEqual)
+        .value();
 }
